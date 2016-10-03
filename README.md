@@ -1,6 +1,6 @@
 # concurrent merge sort on singly-linked list
 
-`merge-sort-list` implements merge sort on linked list via POSIX Thread.
+`mergesort-concurrent` implements merge sort on linked list via POSIX Thread.
 
 ## Build
 ```bash
@@ -31,6 +31,6 @@ scripts/install-git-hooks
 ```
 
 # Licensing
-`merge-sort-list` is freely redistributable under the two-clause BSD License.
+`mergesort-concurrent` is freely redistributable under the two-clause BSD License.
 Use of this source code is governed by a BSD-style license that can be found
 in the `LICENSE` file.
