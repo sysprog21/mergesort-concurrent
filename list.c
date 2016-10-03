@@ -48,6 +48,7 @@ node_t *list_get(llist_t *the_list, uint32_t index)
 void list_print(llist_t *the_list)
 {
     node_t *cur = the_list->head;
+    /* FIXME: we have to validate the sorted results in advance. */
     printf("\nsorted results:\n");
     while (cur) {
         printf("[%ld] ", cur->data);

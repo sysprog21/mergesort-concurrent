@@ -152,6 +152,9 @@ int main(int argc, char const *argv[])
 
     /* Read data */
     the_list = list_new();
+    /* FIXME: remove all all occurrences of printf and scanf
+     * in favor of automated test flow.
+     */
     printf("input unsorted data line-by-line\n");
     for (int i = 0; i < data_count; ++i) {
         long int data;
