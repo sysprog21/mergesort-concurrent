@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 typedef struct _task {
-    void (*function)(void *);
+    void (*func)(void *);
     void *arg;
     struct _task *next, *last;
 } task_t;

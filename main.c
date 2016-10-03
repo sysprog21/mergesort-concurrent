@@ -76,14 +76,14 @@ void merge(void *data)
             tmp_list.list = NULL;
             pthread_mutex_unlock(&(thread_data.mutex));
             task_t *new_task = (task_t *) malloc(sizeof(task_t));
-            new_task->function = merge;
+            new_task->func = merge;
             new_task->arg = mergeList(list, tmpLocal);
             tqueue_push(pool->queue, new_task);
         }
     } else {
         the_list = list;
         task_t *new_task = (task_t *) malloc(sizeof(task_t));
-        new_task->function = NULL;
+        new_task->func = NULL;
         tqueue_push(pool->queue, new_task);
         list_print(list);
     }
@@ -107,11 +107,11 @@ void cut(void *data)
 
         /* Make new task */
         task_t *new_task = (task_t *) malloc(sizeof(task_t));
-        new_task->function = cut;
+        new_task->func = cut;
         new_task->arg = newlist;
         tqueue_push(pool->queue, new_task);
         new_task = (task_t *) malloc(sizeof(task_t));
-        new_task->function = cut;
+        new_task->func = cut;
         new_task->arg = list;
         tqueue_push(pool->queue, new_task);
     } else {
@@ -127,11 +127,11 @@ static void *thread_run(void *data)
     while (running) {
         curTask = tqueue_pop(pool->queue);
         if (curTask) {
-            if (!curTask->function) {
+            if (!curTask->func) {
                 tqueue_push(pool->queue, curTask);
                 break;
             } else {
-                curTask->function(curTask->arg);
+                curTask->func(curTask->arg);
                 free(curTask);
             }
         }
@@ -168,7 +168,7 @@ int main(int argc, char const *argv[])
 
     /* launch the first task */
     task_t *new_task = (task_t *) malloc(sizeof(task_t));
-    new_task->function = cut;
+    new_task->func = cut;
     new_task->arg = the_list;
     tqueue_push(pool->queue, new_task);
 
