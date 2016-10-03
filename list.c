@@ -31,7 +31,7 @@ int list_add(llist_t *the_list, val_t val)
     return 0;
 }
 
-/* NEW
+/*
  * get the node specify by index
  * if the index is out of range, it will return NULL
  */
@@ -48,8 +48,9 @@ node_t *list_get(llist_t *the_list, uint32_t index)
 void list_print(llist_t *the_list)
 {
     node_t *cur = the_list->head;
+    printf("\nsorted results:\n");
     while (cur) {
-        printf("%ld ", cur->data);
+        printf("[%ld] ", cur->data);
         cur = cur->next;
     }
     printf("\n");
