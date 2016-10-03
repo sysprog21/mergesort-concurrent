@@ -21,7 +21,7 @@ static llist_t *the_list = NULL;
 static int thread_count = 0, data_count = 0, max_cut = 0;
 static tpool_t *pool = NULL;
 
-llist_t *mergeList(llist_t *a, llist_t *b)
+llist_t *merge_list(llist_t *a, llist_t *b)
 {
     llist_t *new_list = list_new();
     node_t *cur = NULL;
@@ -50,7 +50,7 @@ llist_t *mergeList(llist_t *a, llist_t *b)
     return new_list;
 }
 
-llist_t *mergeSort(llist_t *list)
+llist_t *merge_sort(llist_t *list)
 {
     if (list->size < 2)
         return list;
@@ -58,9 +58,9 @@ llist_t *mergeSort(llist_t *list)
     llist_t *newlist = list_new();
     newlist->head = list_get(list, mid);
     newlist->size = list->size - mid;
-    list_get(list, mid-1)->next = NULL;
+    list_get(list, mid - 1)->next = NULL;
     list->size = mid;
-    return mergeList(mergeSort(list), mergeSort(newlist));
+    return merge_list(merge_sort(list), merge_sort(newlist));
 }
 
 void merge(void *data)
@@ -68,7 +68,7 @@ void merge(void *data)
     llist_t *list = (llist_t *) data;
     if (list->size < data_count) {
         pthread_mutex_lock(&(thread_data.mutex));
-        llist_t * tmpLocal = tmp_list.list;
+        llist_t *tmpLocal = tmp_list.list;
         if (!tmpLocal) {
             tmp_list.list = list;
             pthread_mutex_unlock(&(thread_data.mutex));
@@ -77,7 +77,7 @@ void merge(void *data)
             pthread_mutex_unlock(&(thread_data.mutex));
             task_t *new_task = (task_t *) malloc(sizeof(task_t));
             new_task->func = merge;
-            new_task->arg = mergeList(list, tmpLocal);
+            new_task->arg = merge_list(list, tmpLocal);
             tqueue_push(pool->queue, new_task);
         }
     } else {
@@ -91,7 +91,7 @@ void merge(void *data)
 
 void cut(void *data)
 {
-    llist_t *list = (llist_t *)data;
+    llist_t *list = (llist_t *) data;
     pthread_mutex_lock(&(thread_data.mutex));
     int cutLocal = thread_data.cuthread_count;
     if (list->size > 1 && cutLocal < max_cut) {
@@ -105,7 +105,7 @@ void cut(void *data)
         list_get(list, mid-1)->next = NULL;
         list->size = mid;
 
-        /* Make new task */
+        /* create new task */
         task_t *new_task = (task_t *) malloc(sizeof(task_t));
         new_task->func = cut;
         new_task->arg = newlist;
@@ -116,23 +116,22 @@ void cut(void *data)
         tqueue_push(pool->queue, new_task);
     } else {
         pthread_mutex_unlock(&(thread_data.mutex));
-        merge(mergeSort(list));
+        merge(merge_sort(list));
     }
 }
 
-static void *thread_run(void *data)
+static void *task_run(void *data)
 {
-    task_t *curTask = NULL;
-    int running = 1;
-    while (running) {
-        curTask = tqueue_pop(pool->queue);
-        if (curTask) {
-            if (!curTask->func) {
-                tqueue_push(pool->queue, curTask);
+    task_t *current_task = NULL;
+    while (1) {
+        current_task = tqueue_pop(pool->queue);
+        if (current_task) {
+            if (!current_task->func) {
+                tqueue_push(pool->queue, current_task);
                 break;
             } else {
-                curTask->func(curTask->arg);
-                free(curTask);
+                current_task->func(current_task->arg);
+                free(current_task);
             }
         }
     }
@@ -152,6 +151,7 @@ int main(int argc, char const *argv[])
 
     /* Read data */
     the_list = list_new();
+
     /* FIXME: remove all all occurrences of printf and scanf
      * in favor of automated test flow.
      */
@@ -167,7 +167,7 @@ int main(int argc, char const *argv[])
     thread_data.cuthread_count = 0;
     tmp_list.list = NULL;
     pool = (tpool_t *) malloc(sizeof(tpool_t));
-    tpool_init(pool, thread_count, thread_run);
+    tpool_init(pool, thread_count, task_run);
 
     /* launch the first task */
     task_t *new_task = (task_t *) malloc(sizeof(task_t));
