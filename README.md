@@ -13,19 +13,15 @@ make
 ```
 Then input integer data line-by-line
 
-# Indenting Code
-You can use AStyle ([Artistic Style](http://astyle.sourceforge.net/)) source code indenter to help you auto format your source code. It will for sure not correct all your coding styles but for sure will eliminate most of them. You can download AStyle from [this location](http://astyle.sourceforge.net/)
-or install via `apt-get`:
+# Install customized Git pre-commit hooks
+Git hooks are scripts that Git executes before or after events such as: commit, push, and receive. We provide the customized hooks for spelling errors and software quality validation while the change is about to be committed.
+
+Before installing the Git hooks, please ensure [astyle](http://astyle.sourceforge.net/) and [cppcheck](http://cppcheck.sourceforge.net/) installed. You can install the packages via `apt-get`:
 ```sh
-sudo apt-get install astyle
+sudo apt-get install astyle cppcheck
 ```
 
-To format your file you can execute below command:
-```sh
-astyle --style=kr --indent=spaces=4 --indent-switches --suffix=none *.[ch]
-```
-
-Install Git pre-commit hook to check C/C++ source file format
+Install Git pre-commit hook to check C/C++ source file format and quality:
 ```sh
 scripts/install-git-hooks
 ```
