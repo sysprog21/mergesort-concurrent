@@ -11,7 +11,7 @@ deps := $(OBJS:%.o=.%.o.d)
 	$(CC) $(CFLAGS) -o $@ -MMD -MF .$@.d -c $<
 
 sort: $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) -rdynamic
 
 clean:
 	rm -f $(OBJS) sort
