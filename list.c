@@ -38,12 +38,12 @@ int list_add(llist_t *the_list, val_t val)
  * get the node specify by index
  * if the index is out of range, it will return NULL
  */
-node_t *list_get(llist_t *the_list, uint32_t index)
+node_t *list_nth(llist_t *the_list, uint32_t idx)
 {
-    if (index > the_list->size)
+    if (idx > the_list->size)
         return NULL;
     node_t *head = the_list->head;
-    while (index--)
+    while (idx--)
         head = head->next;
     return head;
 }

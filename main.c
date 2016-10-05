@@ -56,9 +56,9 @@ llist_t *merge_sort(llist_t *list)
         return list;
     int mid = list->size / 2;
     llist_t *_list = list_new();
-    _list->head = list_get(list, mid);
+    _list->head = list_nth(list, mid);
     _list->size = list->size - mid;
-    list_get(list, mid - 1)->next = NULL;
+    list_nth(list, mid - 1)->next = NULL;
     list->size = mid;
     return merge_list(merge_sort(list), merge_sort(_list));
 }
@@ -100,9 +100,9 @@ void cut(void *data)
         /* cut list */
         int mid = list->size / 2;
         llist_t *_list = list_new();
-        _list->head = list_get(list, mid);
+        _list->head = list_nth(list, mid);
         _list->size = list->size - mid;
-        list_get(list, mid - 1)->next = NULL;
+        list_nth(list, mid - 1)->next = NULL;
         list->size = mid;
 
         /* create new task */
