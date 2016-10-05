@@ -66,7 +66,7 @@ llist_t *merge_sort(llist_t *list)
 void merge(void *data)
 {
     llist_t *list = (llist_t *) data;
-    if (list->size < data_count) {
+    if (list->size < (uint32_t) data_count) {
         pthread_mutex_lock(&(thread_data.mutex));
         llist_t *t = tmp_list.list;
         if (!t) {
@@ -122,6 +122,7 @@ void cut(void *data)
 
 static void *task_run(void *data)
 {
+    (void) data;
     task_t *current_task = NULL;
     while (1) {
         current_task = tqueue_pop(pool->queue);
