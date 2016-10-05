@@ -121,9 +121,8 @@ void cut_func(void *data)
 static void *task_run(void *data)
 {
     (void) data;
-    task_t *_task = NULL;
     while (1) {
-        _task = tqueue_pop(pool->queue);
+        task_t *_task = tqueue_pop(pool->queue);
         if (_task) {
             if (!_task->func) {
                 tqueue_push(pool->queue, _task);
