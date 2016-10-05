@@ -9,7 +9,7 @@
 
 struct {
     pthread_mutex_t mutex;
-    int cuthread_count;
+    int cut_thread_count;
 } thread_data;
 
 struct {
@@ -68,8 +68,8 @@ void merge(void *data)
     llist_t *list = (llist_t *) data;
     if (list->size < data_count) {
         pthread_mutex_lock(&(thread_data.mutex));
-        llist_t *tmpLocal = tmp_list.list;
-        if (!tmpLocal) {
+        llist_t *t = tmp_list.list;
+        if (!t) {
             tmp_list.list = list;
             pthread_mutex_unlock(&(thread_data.mutex));
         } else {
@@ -77,7 +77,7 @@ void merge(void *data)
             pthread_mutex_unlock(&(thread_data.mutex));
             task_t *new_task = (task_t *) malloc(sizeof(task_t));
             new_task->func = merge;
-            new_task->arg = merge_list(list, tmpLocal);
+            new_task->arg = merge_list(list, t);
             tqueue_push(pool->queue, new_task);
         }
     } else {
@@ -93,16 +93,16 @@ void cut(void *data)
 {
     llist_t *list = (llist_t *) data;
     pthread_mutex_lock(&(thread_data.mutex));
-    int cutLocal = thread_data.cuthread_count;
-    if (list->size > 1 && cutLocal < max_cut) {
-        ++thread_data.cuthread_count;
+    int cut_local = thread_data.cut_thread_count;
+    if (list->size > 1 && cut_local < max_cut) {
+        ++thread_data.cut_thread_count;
         pthread_mutex_unlock(&(thread_data.mutex));
-        /* Cut list */
+        /* cut list */
         int mid = list->size / 2;
         llist_t *newlist = list_new();
         newlist->head = list_get(list, mid);
         newlist->size = list->size - mid;
-        list_get(list, mid-1)->next = NULL;
+        list_get(list, mid - 1)->next = NULL;
         list->size = mid;
 
         /* create new task */
@@ -164,7 +164,7 @@ int main(int argc, char const *argv[])
 
     /* initialize and execute tasks from thread pool */
     pthread_mutex_init(&(thread_data.mutex), NULL);
-    thread_data.cuthread_count = 0;
+    thread_data.cut_thread_count = 0;
     tmp_list.list = NULL;
     pool = (tpool_t *) malloc(sizeof(tpool_t));
     tpool_init(pool, thread_count, task_run);
