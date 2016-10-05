@@ -3,7 +3,7 @@
 
 #include "list.h"
 
-node_t *node_new(val_t val, node_t *next)
+static node_t *node_new(val_t val, node_t *next)
 {
     /* allocate node */
     node_t *node = malloc(sizeof(node_t));
