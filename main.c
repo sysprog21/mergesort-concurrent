@@ -65,27 +65,27 @@ llist_t *merge_sort(llist_t *list)
 
 void merge(void *data)
 {
-    llist_t *list = (llist_t *) data;
-    if (list->size < (uint32_t) data_count) {
+    llist_t *_list = (llist_t *) data;
+    if (_list->size < (uint32_t) data_count) {
         pthread_mutex_lock(&(thread_data.mutex));
         llist_t *t = tmp_list.list;
         if (!t) {
-            tmp_list.list = list;
+            tmp_list.list = _list;
             pthread_mutex_unlock(&(thread_data.mutex));
         } else {
             tmp_list.list = NULL;
             pthread_mutex_unlock(&(thread_data.mutex));
             task_t *_task = (task_t *) malloc(sizeof(task_t));
             _task->func = merge;
-            _task->arg = merge_list(list, t);
+            _task->arg = merge_list(_list, t);
             tqueue_push(pool->queue, _task);
         }
     } else {
-        the_list = list;
+        the_list = _list;
         task_t *_task = (task_t *) malloc(sizeof(task_t));
         _task->func = NULL;
         tqueue_push(pool->queue, _task);
-        list_print(list);
+        list_print(_list);
     }
 }
 
