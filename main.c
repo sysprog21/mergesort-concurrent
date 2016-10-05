@@ -10,14 +10,11 @@
 struct {
     pthread_mutex_t mutex;
     int cut_thread_count;
-} thread_data;
+} data_context;
 
-struct {
-    pthread_mutex_t mutex;
-    llist_t *list;
-} tmp_list;
-
+static llist_t *tmp_list;
 static llist_t *the_list = NULL;
+
 static int thread_count = 0, data_count = 0, max_cut = 0;
 static tpool_t *pool = NULL;
 
@@ -67,14 +64,14 @@ void merge(void *data)
 {
     llist_t *_list = (llist_t *) data;
     if (_list->size < (uint32_t) data_count) {
-        pthread_mutex_lock(&(thread_data.mutex));
-        llist_t *t = tmp_list.list;
+        pthread_mutex_lock(&(data_context.mutex));
+        llist_t *t = tmp_list;
         if (!t) {
-            tmp_list.list = _list;
-            pthread_mutex_unlock(&(thread_data.mutex));
+            tmp_list = _list;
+            pthread_mutex_unlock(&(data_context.mutex));
         } else {
-            tmp_list.list = NULL;
-            pthread_mutex_unlock(&(thread_data.mutex));
+            tmp_list = NULL;
+            pthread_mutex_unlock(&(data_context.mutex));
             task_t *_task = (task_t *) malloc(sizeof(task_t));
             _task->func = merge;
             _task->arg = merge_list(_list, t);
@@ -92,11 +89,12 @@ void merge(void *data)
 void cut(void *data)
 {
     llist_t *list = (llist_t *) data;
-    pthread_mutex_lock(&(thread_data.mutex));
-    int cut_local = thread_data.cut_thread_count;
+    pthread_mutex_lock(&(data_context.mutex));
+    int cut_local = data_context.cut_thread_count;
     if (list->size > 1 && cut_local < max_cut) {
-        ++thread_data.cut_thread_count;
-        pthread_mutex_unlock(&(thread_data.mutex));
+        ++data_context.cut_thread_count;
+        pthread_mutex_unlock(&(data_context.mutex));
+
         /* cut list */
         int mid = list->size / 2;
         llist_t *_list = list_new();
@@ -115,7 +113,7 @@ void cut(void *data)
         _task->arg = list;
         tqueue_push(pool->queue, _task);
     } else {
-        pthread_mutex_unlock(&(thread_data.mutex));
+        pthread_mutex_unlock(&(data_context.mutex));
         merge(merge_sort(list));
     }
 }
@@ -164,9 +162,9 @@ int main(int argc, char const *argv[])
     }
 
     /* initialize and execute tasks from thread pool */
-    pthread_mutex_init(&(thread_data.mutex), NULL);
-    thread_data.cut_thread_count = 0;
-    tmp_list.list = NULL;
+    pthread_mutex_init(&(data_context.mutex), NULL);
+    data_context.cut_thread_count = 0;
+    tmp_list = NULL;
     pool = (tpool_t *) malloc(sizeof(tpool_t));
     tpool_init(pool, thread_count, task_run);
 
