@@ -21,26 +21,26 @@ static tpool_t *pool = NULL;
 llist_t *merge_list(llist_t *a, llist_t *b)
 {
     llist_t *_list = list_new();
-    node_t *cur = NULL;
+    node_t *current = NULL;
     while (a->size && b->size) {
         llist_t *small_list = (llist_t *)
                               ((intptr_t) a * (a->head->data <= b->head->data) +
                                (intptr_t) b * (a->head->data > b->head->data));
-        if (cur) {
-            cur->next = small_list->head;
-            cur = cur->next;
+        if (current) {
+            current->next = small_list->head;
+            current = current->next;
         } else {
             _list->head = small_list->head;
-            cur = _list->head;
+            current = _list->head;
         }
         small_list->head = small_list->head->next;
         --small_list->size;
         ++_list->size;
-        cur->next = NULL;
+        current->next = NULL;
     }
     llist_t *remaining_list = (llist_t *) ((intptr_t) a * (a->size > 0) +
                                            (intptr_t) b * (b->size > 0));
-    if (cur) cur->next = remaining_list->head;
+    if (current) current->next = remaining_list->head;
     _list->size += remaining_list->size;
     free(a);
     free(b);
@@ -121,16 +121,16 @@ void cut_func(void *data)
 static void *task_run(void *data)
 {
     (void) data;
-    task_t *current_task = NULL;
+    task_t *_task = NULL;
     while (1) {
-        current_task = tqueue_pop(pool->queue);
-        if (current_task) {
-            if (!current_task->func) {
-                tqueue_push(pool->queue, current_task);
+        _task = tqueue_pop(pool->queue);
+        if (_task) {
+            if (!_task->func) {
+                tqueue_push(pool->queue, _task);
                 break;
             } else {
-                current_task->func(current_task->arg);
-                free(current_task);
+                _task->func(_task->arg);
+                free(_task);
             }
         }
     }
