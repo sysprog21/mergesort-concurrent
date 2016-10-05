@@ -23,25 +23,26 @@ llist_t *merge_list(llist_t *a, llist_t *b)
     llist_t *_list = list_new();
     node_t *current = NULL;
     while (a->size && b->size) {
-        llist_t *small_list = (llist_t *)
-                              ((intptr_t) a * (a->head->data <= b->head->data) +
-                               (intptr_t) b * (a->head->data > b->head->data));
+        llist_t *small = (llist_t *)
+                         ((intptr_t) a * (a->head->data <= b->head->data) +
+                          (intptr_t) b * (a->head->data > b->head->data));
         if (current) {
-            current->next = small_list->head;
+            current->next = small->head;
             current = current->next;
         } else {
-            _list->head = small_list->head;
+            _list->head = small->head;
             current = _list->head;
         }
-        small_list->head = small_list->head->next;
-        --small_list->size;
+        small->head = small->head->next;
+        --small->size;
         ++_list->size;
         current->next = NULL;
     }
-    llist_t *remaining_list = (llist_t *) ((intptr_t) a * (a->size > 0) +
-                                           (intptr_t) b * (b->size > 0));
-    if (current) current->next = remaining_list->head;
-    _list->size += remaining_list->size;
+
+    llist_t *remaining = (llist_t *) ((intptr_t) a * (a->size > 0) +
+                                      (intptr_t) b * (b->size > 0));
+    if (current) current->next = remaining->head;
+    _list->size += remaining->size;
     free(a);
     free(b);
     return _list;
@@ -52,12 +53,13 @@ llist_t *merge_sort(llist_t *list)
     if (list->size < 2)
         return list;
     int mid = list->size / 2;
-    llist_t *_list = list_new();
-    _list->head = list_nth(list, mid);
-    _list->size = list->size - mid;
+    llist_t *left = list;
+    llist_t *right = list_new();
+    right->head = list_nth(list, mid);
+    right->size = list->size - mid;
     list_nth(list, mid - 1)->next = NULL;
-    list->size = mid;
-    return merge_list(merge_sort(list), merge_sort(_list));
+    left->size = mid;
+    return merge_list(merge_sort(left), merge_sort(right));
 }
 
 void merge(void *data)
@@ -103,11 +105,13 @@ void cut_func(void *data)
         list_nth(list, mid - 1)->next = NULL;
         list->size = mid;
 
-        /* create new task */
+        /* create new task: left */
         task_t *_task = (task_t *) malloc(sizeof(task_t));
         _task->func = cut_func;
         _task->arg = _list;
         tqueue_push(pool->queue, _task);
+
+        /* create new task: right */
         _task = (task_t *) malloc(sizeof(task_t));
         _task->func = cut_func;
         _task->arg = list;
