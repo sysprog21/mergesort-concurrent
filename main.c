@@ -65,8 +65,8 @@ void merge(void *data)
     llist_t *_list = (llist_t *) data;
     if (_list->size < (uint32_t) data_count) {
         pthread_mutex_lock(&(data_context.mutex));
-        llist_t *t = tmp_list;
-        if (!t) {
+        llist_t *_t = tmp_list;
+        if (!_t) {
             tmp_list = _list;
             pthread_mutex_unlock(&(data_context.mutex));
         } else {
@@ -74,7 +74,7 @@ void merge(void *data)
             pthread_mutex_unlock(&(data_context.mutex));
             task_t *_task = (task_t *) malloc(sizeof(task_t));
             _task->func = merge;
-            _task->arg = merge_list(_list, t);
+            _task->arg = merge_list(_list, _t);
             tqueue_push(pool->queue, _task);
         }
     } else {
@@ -86,12 +86,12 @@ void merge(void *data)
     }
 }
 
-void cut(void *data)
+void cut_func(void *data)
 {
     llist_t *list = (llist_t *) data;
     pthread_mutex_lock(&(data_context.mutex));
-    int cut_local = data_context.cut_thread_count;
-    if (list->size > 1 && cut_local < max_cut) {
+    int cut_count = data_context.cut_thread_count;
+    if (list->size > 1 && cut_count < max_cut) {
         ++data_context.cut_thread_count;
         pthread_mutex_unlock(&(data_context.mutex));
 
@@ -105,11 +105,11 @@ void cut(void *data)
 
         /* create new task */
         task_t *_task = (task_t *) malloc(sizeof(task_t));
-        _task->func = cut;
+        _task->func = cut_func;
         _task->arg = _list;
         tqueue_push(pool->queue, _task);
         _task = (task_t *) malloc(sizeof(task_t));
-        _task->func = cut;
+        _task->func = cut_func;
         _task->arg = list;
         tqueue_push(pool->queue, _task);
     } else {
@@ -170,7 +170,7 @@ int main(int argc, char const *argv[])
 
     /* launch the first task */
     task_t *_task = (task_t *) malloc(sizeof(task_t));
-    _task->func = cut;
+    _task->func = cut_func;
     _task->arg = the_list;
     tqueue_push(pool->queue, _task);
 
