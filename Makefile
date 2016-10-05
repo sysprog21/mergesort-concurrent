@@ -4,7 +4,13 @@ OBJS = list.o thread.o main.o
 
 .PHONY: all clean test
 
-all: sort
+GIT_HOOKS := .git/hooks/pre-commit
+
+all: $(GIT_HOOKS) sort
+
+$(GIT_HOOKS):
+	@scripts/install-git-hooks
+	@echo
 
 deps := $(OBJS:%.o=.%.o.d)
 %.o: %.c
