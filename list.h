@@ -1,10 +1,6 @@
 #ifndef LLIST_H_
 #define LLIST_H_
 
-#include <assert.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <stdio.h>
 #include <stdint.h>
 
 typedef intptr_t val_t;

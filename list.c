@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "list.h"
 
 node_t *new_node(val_t val, node_t *next)
