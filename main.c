@@ -40,7 +40,7 @@ llist_t *merge_list(llist_t *a, llist_t *b)
     }
     llist_t *remaining_list = (llist_t *) ((intptr_t) a * (a->size > 0) +
                                            (intptr_t) b * (b->size > 0));
-    cur->next = remaining_list->head;
+    if (cur) cur->next = remaining_list->head;
     _list->size += remaining_list->size;
     free(a);
     free(b);
