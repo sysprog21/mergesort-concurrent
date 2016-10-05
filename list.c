@@ -3,7 +3,7 @@
 
 #include "list.h"
 
-node_t *new_node(val_t val, node_t *next)
+node_t *node_new(val_t val, node_t *next)
 {
     /* allocate node */
     node_t *node = malloc(sizeof(node_t));
@@ -27,9 +27,9 @@ llist_t *list_new()
  */
 int list_add(llist_t *the_list, val_t val)
 {
-    node_t *new_elem = new_node(val, NULL);
-    new_elem->next = the_list->head;
-    the_list->head = new_elem;
+    node_t *e = node_new(val, NULL);
+    e->next = the_list->head;
+    the_list->head = e;
     the_list->size++;
     return 0;
 }

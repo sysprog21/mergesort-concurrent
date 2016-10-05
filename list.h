@@ -18,7 +18,6 @@ typedef struct llist {
 llist_t *list_new();
 int list_add(llist_t *the_list, val_t val);
 void list_print(llist_t *the_list);
-node_t *new_node(val_t val, node_t *next);
 node_t *list_get(llist_t *the_list, uint32_t index);
 
 #endif
