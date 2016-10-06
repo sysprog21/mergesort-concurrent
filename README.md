@@ -1,6 +1,18 @@
 # concurrent merge sort on singly-linked list
 
-`mergesort-concurrent` implements merge sort on linked list via POSIX Thread.
+`mergesort-concurrent` implements merge sort on linked list concurrently.
+
+Tasks give a framework for studying concurrency:
+
+* Restricting number of threads in thread pools.
+* Relaxing task boundaries so that overhead associated with task management
+  is kept reasonable.
+
+The strategy to implement merge sort concurrently:
+
+* Make recursive calls tasks
+* No need to wait for tasks to complete after spawning them
+* Tasks that creates sub-tasks can be allowed to terminated
 
 ## Build
 ```bash
