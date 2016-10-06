@@ -164,7 +164,7 @@ int main(int argc, char const *argv[])
         list_add(the_list, data);
     }
 
-    /* initialize and execute tasks from thread pool */
+    /* initialize tasks inside thread pool */
     pthread_mutex_init(&(data_context.mutex), NULL);
     data_context.cut_thread_count = 0;
     tmp_list = NULL;
