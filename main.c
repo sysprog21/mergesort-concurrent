@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "thread.h"
+#include "threadpool.h"
 #include "list.h"
 
 #define USAGE "usage: ./sort [thread_count] [input_count]\n"
