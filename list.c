@@ -58,7 +58,7 @@ int list_add(llist_t *list, val_t val)
  * @param idx Specify the index of the node in the _list_
  * @return The node at index _idx_.
  */
-node_t *list_nth(llist_t *list, uint32_t idx)
+node_t *list_get(llist_t *list, uint32_t idx)
 {
     /* FIXME: this function actually returns the (idx+1)th element. */
     if (idx > list->size)
