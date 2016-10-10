@@ -60,8 +60,7 @@ int list_add(llist_t *list, val_t val)
  */
 node_t *list_get(llist_t *list, uint32_t idx)
 {
-    /* FIXME: this function actually returns the (idx+1)th element. */
-    if (idx > list->size)
+    if (!(idx < list->size))
         return NULL;
     node_t *head = list->head;
     while (idx--)
