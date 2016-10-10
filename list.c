@@ -3,6 +3,12 @@
 
 #include "list.h"
 
+/**
+ * @brief Create a new node with data _val_ and set the next node to _net_
+ * @param val Specifiy the data to assign to the new node
+ * @param next Pointer to the next node
+ * @return Pointer to the created new node
+ */
 static node_t *node_new(val_t val, node_t *next)
 {
     /* allocate node */
@@ -12,6 +18,14 @@ static node_t *node_new(val_t val, node_t *next)
     return node;
 }
 
+/**
+ * @brief Initialize the linked list.
+ *
+ * The function will allocate a block of memory for _llist\_t_ and
+ * initialize its members _head_ to NULL and _size_ to 0.
+ *
+ * @return Pointer to the allocated _llist\_t_
+ */
 llist_t *list_new()
 {
     /* allocate list */
@@ -21,10 +35,11 @@ llist_t *list_new()
     return list;
 }
 
-/*
- * list_add inserts a new node with the given value val in the list
- * (if the value was absent) or does nothing (if the value is already present).
- * Note that the created node will be appended at the head of the list.
+/**
+ * @brief Insert a new node with the given value val at the head of the _list_
+ * @param list The target linked list
+ * @param val Specify the value
+ * @return Always return 0.
  */
 int list_add(llist_t *list, val_t val)
 {
@@ -32,12 +47,17 @@ int list_add(llist_t *list, val_t val)
     e->next = list->head;
     list->head = e;
     list->size++;
+    /* TODO: Return the final size of the linked list */
     return 0;
 }
 
-/*
- * get the node specify by index
- * if the index is out of range, it will return NULL
+/**
+ * @brief Get the node specified by index
+ * If the index is out of range, it will return NULL.
+ *
+ * @param list The target linked list
+ * @param idx Specify the index of the node in the _list_
+ * @return The node at index _idx_.
  */
 node_t *list_nth(llist_t *list, uint32_t idx)
 {
@@ -50,6 +70,10 @@ node_t *list_nth(llist_t *list, uint32_t idx)
     return head;
 }
 
+/**
+ * @brief Display the data of all nodes in the linked list
+ * @param list The target linked list
+ */
 void list_print(llist_t *list)
 {
     node_t *cur = list->head;
