@@ -39,7 +39,7 @@ llist_t *list_new()
  * @brief Insert a new node with the given value val at the head of the _list_
  * @param list The target linked list
  * @param val Specify the value
- * @return Always return 0.
+ * @return The final size of the linked list
  */
 int list_add(llist_t *list, val_t val)
 {
@@ -47,8 +47,7 @@ int list_add(llist_t *list, val_t val)
     e->next = list->head;
     list->head = e;
     list->size++;
-    /* TODO: Return the final size of the linked list */
-    return 0;
+    return list->size;
 }
 
 /**
