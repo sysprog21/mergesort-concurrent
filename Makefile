@@ -19,6 +19,9 @@ deps := $(OBJS:%.o=.%.o.d)
 sort: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) -rdynamic
 
+genData:
+	uniq dictionary/words.txt | sort -R > dictionary/input.txt
+
 clean:
 	rm -f $(OBJS) sort
 	@rm -rf $(deps)
