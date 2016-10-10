@@ -10,9 +10,10 @@ typedef struct node {
     struct node *next;
 } node_t;
 
+/* Store the information of the linked list. */
 typedef struct llist {
-    node_t *head;
-    uint32_t size;
+    node_t *head;   // The head of the linked list.
+    uint32_t size;  // The size of the linked list.
 } llist_t;
 
 llist_t *list_new();

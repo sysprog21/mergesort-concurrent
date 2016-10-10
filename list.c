@@ -24,6 +24,7 @@ llist_t *list_new()
 /*
  * list_add inserts a new node with the given value val in the list
  * (if the value was absent) or does nothing (if the value is already present).
+ * Note that the created node will be appended at the head of the list.
  */
 int list_add(llist_t *list, val_t val)
 {
@@ -40,6 +41,7 @@ int list_add(llist_t *list, val_t val)
  */
 node_t *list_nth(llist_t *list, uint32_t idx)
 {
+    /* FIXME: this function actually returns the (idx+1)th element. */
     if (idx > list->size)
         return NULL;
     node_t *head = list->head;
