@@ -83,3 +83,17 @@ void list_print(llist_t *list)
     }
     printf("\n");
 }
+
+/**
+ * @brief Release the memory allocated to the linked list
+ * @param list The target linked list
+ */
+void list_free(llist_t *list)
+{
+    node_t *cur = list->head, *next;
+    while (cur) {
+        next = cur->next;
+        free(cur);
+    }
+    list->head = NULL;
+}
