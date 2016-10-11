@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "list.h"
+#include "generic_printf.h"
 
 /**
  * @brief Create a new node with data _val_ and set the next node to _net_
@@ -75,10 +76,8 @@ node_t *list_get(llist_t *list, uint32_t idx)
 void list_print(llist_t *list)
 {
     node_t *cur = list->head;
-    /* FIXME: we have to validate the sorted results in advance. */
-    printf("\nsorted results:\n");
     while (cur) {
-        printf("[%ld] ", cur->data);
+        GENERIC_PRINTLN(cur->data);
         cur = cur->next;
     }
     printf("\n");
