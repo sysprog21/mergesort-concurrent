@@ -5,7 +5,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-/*========== Task ==========*/
+/**
+ * @defgroup Tasks
+ * @{
+ */
 
 /**
  * @struct _task threadpool.h "threadpool.h"
@@ -20,7 +23,12 @@ typedef struct _task {
 
 int task_free(task_t *the_task);
 
-/*========== Task queue ==========*/
+/** @} */
+
+/**
+ * @defgroup Task_Queue
+ * @{
+ */
 
 /**
  * @struct _tqueue_t threadpool.h "threadpool.h"
@@ -40,7 +48,12 @@ uint32_t tqueue_size(tqueue_t *the_queue);
 int tqueue_push(tqueue_t *the_queue, task_t *task);
 int tqueue_free(tqueue_t *the_queue);
 
-/*========== Thread pool ==========*/
+/** @} */
+
+/**
+ * @defgroup Thread_Pool
+ * @{
+ */
 
 /**
  * @struct _tpool_t threadpool.h "threadpool.h"
@@ -54,5 +67,7 @@ typedef struct _tpool_t {
 
 int tpool_init(tpool_t *the_pool, uint32_t count, void *(*func)(void *));
 int tpool_free(tpool_t *the_pool);
+
+/** @} */
 
 #endif
