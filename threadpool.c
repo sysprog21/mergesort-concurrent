@@ -17,10 +17,12 @@ int task_free(task_t *the_task)
  * Note that this function doesn't allocate memory for the task queue.
  *
  * @param the_queue Pointer to the target _tqueue\_t_
+ * @return -1 if _the\_queue_ is NULL. Otherwise, return 0.
  */
 int tqueue_init(tqueue_t *the_queue)
 {
-    // TODO: Check if the input pointer is vaild
+    if (the_queue == NULL)
+        return -1;
     the_queue->head = NULL;
     the_queue->tail = NULL;
     pthread_mutex_init(&(the_queue->mutex), NULL);
