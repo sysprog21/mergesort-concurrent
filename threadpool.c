@@ -6,6 +6,11 @@
  */
 int task_free(task_t *the_task)
 {
+    // Avoid accessing the_task->arg.
+    if (!the_task)
+        return 0;
+    // FIXME Is the argument dynamically allocated?
+    // If yes, will the data of argument be used after the task ends?
     free(the_task->arg);
     free(the_task);
     return 0;
