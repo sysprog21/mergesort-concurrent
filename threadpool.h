@@ -18,7 +18,6 @@ typedef struct _task {
     void (*func)(void *);   ///< Pointer to task function
     void *arg;              ///< Pointer to the arguments passed to _func_
     struct _task *next;     ///< Pointer to the next task
-    struct _task *last;     ///< Pointer to the previous task
 } task_t;
 
 int task_free(task_t *the_task);
