@@ -108,13 +108,13 @@ void cut_func(void *data)
         /* create new task: left */
         task_t *_task = (task_t *) malloc(sizeof(task_t));
         _task->func = cut_func;
-        _task->arg = _list;
+        _task->arg = list;
         tqueue_push(pool->queue, _task);
 
         /* create new task: right */
         _task = (task_t *) malloc(sizeof(task_t));
         _task->func = cut_func;
-        _task->arg = list;
+        _task->arg = _list;
         tqueue_push(pool->queue, _task);
     } else {
         pthread_mutex_unlock(&(data_context.mutex));
