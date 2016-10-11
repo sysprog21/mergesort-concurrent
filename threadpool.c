@@ -2,15 +2,15 @@
 
 /**
  * @brief Release the memory allocated in _task\_t_
+ *
+ * Note that you have to make sure that the resourse which
+ * _task\_t->arg_ points to is no longer used after this
+ * function call.
+ *
  * @param the_task Pointer to the target _task\_t_
  */
 int task_free(task_t *the_task)
 {
-    // Avoid accessing the_task->arg.
-    if (!the_task)
-        return 0;
-    // FIXME Is the argument dynamically allocated?
-    // If yes, will the data of argument be used after the task ends?
     free(the_task->arg);
     free(the_task);
     return 0;
@@ -99,7 +99,7 @@ int tqueue_free(tqueue_t *the_queue)
     task_t *cur = the_queue->head;
     while (cur) {
         the_queue->head = the_queue->head->next;
-        task_free(cur);
+        free(cur);
         cur = the_queue->head;
     }
     pthread_mutex_destroy(&(the_queue->mutex));
