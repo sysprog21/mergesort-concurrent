@@ -85,10 +85,10 @@ void list_print(llist_t *list)
 }
 
 /**
- * @brief Release the memory allocated to the linked list
+ * @brief Release the memory allocated to nodes in the linked list
  * @param list The target linked list
  */
-void list_free(llist_t *list)
+void list_free_nodes(llist_t *list)
 {
     node_t *cur = list->head, *next;
     while (cur) {
