@@ -2,7 +2,10 @@
 
 #include "merge_sort.h"
 
-llist_t *merge_list(llist_t *a, llist_t *b)
+/**
+ * @brief Sort and merge the two lists _a_ and _b_.
+ */
+llist_t *sort_n_merge(llist_t *a, llist_t *b)
 {
     llist_t *_list = list_new();
     node_t *current = NULL;
@@ -36,7 +39,10 @@ llist_t *merge_list(llist_t *a, llist_t *b)
     return _list;
 }
 
-llist_t *merge_sort(llist_t *list)
+/**
+ * @brief Split the list and merge later.
+ */
+llist_t *split_n_merge(llist_t *list)
 {
     if (list->size < 2)
         return list;
@@ -47,5 +53,10 @@ llist_t *merge_sort(llist_t *list)
     right->size = list->size - mid;
     list_get(list, mid - 1)->next = NULL;
     left->size = mid;
-    return merge_list(merge_sort(left), merge_sort(right));
+    return sort_n_merge(split_n_merge(left), split_n_merge(right));
+}
+
+llist_t *merge_sort(llist_t *list)
+{
+    return split_n_merge(list);
 }
