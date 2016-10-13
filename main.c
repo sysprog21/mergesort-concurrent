@@ -9,6 +9,8 @@
 
 #define USAGE "usage: ./sort [thread_count] [input_count]\n"
 
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 struct {
     pthread_mutex_t mutex;
     int cut_thread_count;
@@ -109,8 +111,7 @@ int main(int argc, char const *argv[])
     }
     thread_count = atoi(argv[1]);
     data_count = atoi(argv[2]);
-    max_cut = thread_count * (thread_count <= data_count) +
-              data_count * (thread_count > data_count) - 1;
+    max_cut = MIN(thread_count, data_count) - 1;
 
     /* Read data */
     the_list = list_new();
