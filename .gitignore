@@ -7,4 +7,4 @@
 *.swp
 *.bak
 sort
-dictionary/input.txt
+test_data/input.txt

@@ -20,7 +20,7 @@ sort: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) -rdynamic
 
 genData:
-	uniq dictionary/words.txt | sort -R > dictionary/input.txt
+	uniq test_data/words.txt | sort -R > test_data/input.txt
 
 clean:
 	rm -f $(OBJS) sort
