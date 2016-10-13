@@ -30,7 +30,6 @@ SORTED_DATA_FILE ?= $(TEST_DATA_FILE).sorted
 SORTED_RESULT    ?= /tmp/sort_result.txt
 
 check: sort
-	@rm -rf $(TEST_DATA_FILE)
 # Generate testing data
 	@bash scripts/gen-random-numbers.sh $(NUM_OF_DATA) $(TEST_DATA_FILE)
 # Sort the testing data first to generate ground truth

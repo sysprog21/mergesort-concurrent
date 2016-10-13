@@ -10,6 +10,7 @@ if [ "$#" -ne 2 ]; then
 	exit 1;
 fi;
 
+rm -rf $output
 for i in $(eval echo {1..$n}); do
 	echo $RANDOM >> $output;
 done;
