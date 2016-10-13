@@ -134,6 +134,7 @@ int main(int argc, char const *argv[])
     tpool_init(pool, thread_count, task_run);
 
     struct timeval start, end;
+    uint32_t consumed_tasks;
     // Start when the first task launches.
     gettimeofday(&start, NULL);
 
@@ -144,11 +145,12 @@ int main(int argc, char const *argv[])
     tqueue_push(pool->queue, _task);
 
     /* release thread pool */
-    tpool_free(pool);
+    consumed_tasks = tpool_free(pool);
 
     gettimeofday(&end, NULL);
 
     /* Report */
+    printf("#Total_tasks_consumed: %d\n", consumed_tasks);
     printf("#Elapsed_time: %.3lf ms\n", (end.tv_sec - start.tv_sec) * 1000 +
            (double)(end.tv_usec - start.tv_usec) / 1000.0f);
 

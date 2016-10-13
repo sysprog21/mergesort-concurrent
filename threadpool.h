@@ -39,13 +39,14 @@ typedef struct _tqueue_t {
     pthread_mutex_t mutex;  ///< The mutex lock of this queue
     pthread_cond_t cond;    ///< The conitional variable of this queue
     uint32_t size;          ///< The size of the queue
+    uint32_t num_of_consumed;   ///< The number of consumed tasks
 } tqueue_t;
 
 int tqueue_init(tqueue_t *the_queue);
 task_t *tqueue_pop(tqueue_t * const the_queue);
 uint32_t tqueue_size(tqueue_t * const the_queue);
 int tqueue_push(tqueue_t * const the_queue, task_t *task);
-int tqueue_free(tqueue_t *the_queue);
+uint32_t tqueue_free(tqueue_t *the_queue);
 
 /** @} */
 
@@ -65,7 +66,7 @@ typedef struct _tpool_t {
 } tpool_t;
 
 int tpool_init(tpool_t *the_pool, uint32_t count, void *(*func)(void *));
-int tpool_free(tpool_t *the_pool);
+uint32_t tpool_free(tpool_t *the_pool);
 
 /** @} */
 
