@@ -81,7 +81,6 @@ void list_print(const llist_t * const list)
         GENERIC_PRINTLN(cur->data);
         cur = cur->next;
     }
-    printf("\n");
 }
 
 /**

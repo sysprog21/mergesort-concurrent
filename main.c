@@ -47,7 +47,6 @@ void merge_thread_lists(void *data)
         task_t *_task = (task_t *) malloc(sizeof(task_t));
         _task->func = NULL;
         tqueue_push(pool->queue, _task);
-        list_print(_list);
     }
 }
 
@@ -156,6 +155,9 @@ int main(int argc, char const *argv[])
     printf("#Total_tasks_consumed: %d\n", consumed_tasks);
     printf("#Elapsed_time: %.3lf ms\n", duration);
     printf("#Throughput: %d (per sec)\n", (uint32_t)(consumed_tasks * 1000 / duration));
+
+    /* Sorting Result */
+    list_print(the_list);
 
     return 0;
 }
