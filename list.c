@@ -42,7 +42,7 @@ llist_t *list_new()
  * @param val Specify the value
  * @return The final size of the linked list
  */
-int list_add(llist_t *list, val_t val)
+int list_add(llist_t * const list, const val_t val)
 {
     node_t *e = node_new(val, NULL);
     e->next = list->head;
@@ -56,11 +56,12 @@ int list_add(llist_t *list, val_t val)
  * If the index is out of range, it will return NULL.
  *
  * @param list The target linked list
- * @param idx Specify the index of the node in the _list_
- * @return The node at index _idx_.
+ * @param index Specify the index of the node in the _list_
+ * @return The node at index _index_.
  */
-node_t *list_get(llist_t *list, uint32_t idx)
+node_t *list_get(llist_t * const list, const uint32_t index)
 {
+    uint32_t idx = index;
     if (!(idx < list->size))
         return NULL;
     node_t *head = list->head;
@@ -73,9 +74,9 @@ node_t *list_get(llist_t *list, uint32_t idx)
  * @brief Display the data of all nodes in the linked list
  * @param list The target linked list
  */
-void list_print(llist_t *list)
+void list_print(const llist_t * const list)
 {
-    node_t *cur = list->head;
+    const node_t *cur = list->head;
     while (cur) {
         GENERIC_PRINTLN(cur->data);
         cur = cur->next;

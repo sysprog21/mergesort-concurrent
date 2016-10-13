@@ -24,9 +24,9 @@ typedef struct llist {
 } llist_t;
 
 llist_t *list_new();
-int list_add(llist_t *the_list, val_t val);
-void list_print(llist_t *the_list);
-node_t *list_get(llist_t *the_list, uint32_t index);
+int list_add(llist_t * const the_list, const val_t val);
+void list_print(const llist_t * const the_list);
+node_t *list_get(llist_t * const the_list, const uint32_t index);
 void list_free_nodes(llist_t *the_list);
 
 #endif

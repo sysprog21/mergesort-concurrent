@@ -41,7 +41,7 @@ int tqueue_init(tqueue_t *the_queue)
  * @param the_queue Pointer to the target task queue
  * @return The popped task. NULL if the queue is empty.
  */
-task_t *tqueue_pop(tqueue_t *the_queue)
+task_t *tqueue_pop(tqueue_t * const the_queue)
 {
     task_t *ret;
     pthread_mutex_lock(&(the_queue->mutex));
@@ -63,7 +63,7 @@ task_t *tqueue_pop(tqueue_t *the_queue)
  * @param the_queue Pointer to the target task queue
  * @return The number of the tasks in the task queue
  */
-uint32_t tqueue_size(tqueue_t *the_queue)
+uint32_t tqueue_size(tqueue_t * const the_queue)
 {
     uint32_t ret;
     pthread_mutex_lock(&(the_queue->mutex));
@@ -77,7 +77,7 @@ uint32_t tqueue_size(tqueue_t *the_queue)
  * @param the_queue Pointer to the target task queue
  * @param task Pointer to the task to push
  */
-int tqueue_push(tqueue_t *the_queue, task_t *task)
+int tqueue_push(tqueue_t * const the_queue, task_t *task)
 {
     pthread_mutex_lock(&(the_queue->mutex));
     task->next = NULL;

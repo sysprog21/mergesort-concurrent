@@ -42,9 +42,9 @@ typedef struct _tqueue_t {
 } tqueue_t;
 
 int tqueue_init(tqueue_t *the_queue);
-task_t *tqueue_pop(tqueue_t *the_queue);
-uint32_t tqueue_size(tqueue_t *the_queue);
-int tqueue_push(tqueue_t *the_queue, task_t *task);
+task_t *tqueue_pop(tqueue_t * const the_queue);
+uint32_t tqueue_size(tqueue_t * const the_queue);
+int tqueue_push(tqueue_t * const the_queue, task_t *task);
 int tqueue_free(tqueue_t *the_queue);
 
 /** @} */
