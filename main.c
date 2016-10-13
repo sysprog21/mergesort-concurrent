@@ -7,7 +7,7 @@
 #include "list.h"
 #include "merge_sort.h"
 
-#define USAGE "usage: ./sort [thread_count] [input_count]\n"
+#define USAGE "usage: ./sort [thread_count] [input_file]\n"
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -103,6 +103,19 @@ static void *task_run(void *data __attribute__ ((__unused__)))
     pthread_exit(NULL);
 }
 
+static uint32_t build_list_from_file(llist_t *_list, const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    char buffer[16];
+
+    while (fgets(buffer, 16, fp) != NULL) {
+        list_add(_list, atol(buffer));
+    }
+
+    fclose(fp);
+    return _list->size;
+}
+
 int main(int argc, char const *argv[])
 {
     if (argc < 3) {
@@ -110,21 +123,12 @@ int main(int argc, char const *argv[])
         return -1;
     }
     thread_count = atoi(argv[1]);
-    data_count = atoi(argv[2]);
-    max_cut = MIN(thread_count, data_count) - 1;
 
     /* Read data */
     the_list = list_new();
+    data_count = build_list_from_file(the_list, argv[2]);
 
-    /* FIXME: remove all all occurrences of printf and scanf
-     * in favor of automated test flow.
-     */
-    printf("input unsorted data line-by-line\n");
-    for (int i = 0; i < data_count; ++i) {
-        long int data;
-        scanf("%ld", &data);
-        list_add(the_list, data);
-    }
+    max_cut = MIN(thread_count, data_count) - 1;
 
     /* initialize tasks inside thread pool */
     pthread_mutex_init(&(data_context.mutex), NULL);
