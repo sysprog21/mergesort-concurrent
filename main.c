@@ -36,18 +36,13 @@ void merge_thread_lists(void *data)
             // and its own local list.
             tmp_list = NULL;
             pthread_mutex_unlock(&(data_context.mutex));
-            task_t *_task = (task_t *) malloc(sizeof(task_t));
-            _task->func = merge_thread_lists;
-            _task->arg = sort_n_merge(_list, _t);
-            tqueue_push(pool->queue, _task);
+            tqueue_push(pool->queue, task_new(merge_thread_lists, sort_n_merge(_list, _t)));
         }
     } else {
         // All local lists are merged, push a termination task to
         // the task queue.
         the_list = _list;
-        task_t *_task = (task_t *) malloc(sizeof(task_t));
-        _task->func = NULL;
-        tqueue_push(pool->queue, _task);
+        tqueue_push(pool->queue, task_new(NULL, NULL));
     }
 }
 
@@ -61,7 +56,6 @@ void cut_local_list(void *data)
 {
     llist_t *list = (llist_t *) data, *local_list;
     node_t *head, *tail;
-    task_t *_task;
     int local_size = data_count / max_cut;
 
     head = list->head;
@@ -75,19 +69,13 @@ void cut_local_list(void *data)
         head = tail->next;
         tail->next = NULL;
         // Create new task
-        _task = (task_t *) malloc(sizeof(task_t));
-        _task->func = sort_local_list;
-        _task->arg = local_list;
-        tqueue_push(pool->queue, _task);
+        tqueue_push(pool->queue, task_new(sort_local_list, local_list));
     }
     // The last takes the rest.
     local_list = list_new();
     local_list->head = head;
     local_list->size = list->size - local_size * (max_cut - 1);
-    _task = (task_t *) malloc(sizeof(task_t));
-    _task->func = sort_local_list;
-    _task->arg = local_list;
-    tqueue_push(pool->queue, _task);
+    tqueue_push(pool->queue, task_new(sort_local_list, local_list));
 }
 
 static void *task_run(void *data __attribute__ ((__unused__)))
@@ -147,10 +135,7 @@ int main(int argc, char const *argv[])
     gettimeofday(&start, NULL);
 
     /* launch the first task */
-    task_t *_task = (task_t *) malloc(sizeof(task_t));
-    _task->func = cut_local_list;
-    _task->arg = the_list;
-    tqueue_push(pool->queue, _task);
+    tqueue_push(pool->queue, task_new(cut_local_list, the_list));
 
     /* release thread pool */
     consumed_tasks = tpool_free(pool);

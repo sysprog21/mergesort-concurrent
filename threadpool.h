@@ -21,6 +21,7 @@ typedef struct _task {
 } task_t;
 
 int task_free(task_t *the_task);
+task_t *task_new(void (*func)(void *), void *arg);
 
 /** @} */
 

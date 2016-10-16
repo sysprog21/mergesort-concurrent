@@ -17,6 +17,17 @@ int task_free(task_t *the_task)
 }
 
 /**
+ * @brief Create a new task.
+ */
+task_t *task_new(void (*func)(void *), void *arg)
+{
+    task_t *new_task = (task_t *)malloc(sizeof(task_t));
+    new_task->func = func;
+    new_task->arg = arg;
+    return new_task;
+}
+
+/**
  * @brief Initialize the members in _tqueue\_t_.
  *
  * Note that this function doesn't allocate memory for the task queue.
