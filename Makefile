@@ -31,6 +31,7 @@ TEST_DATA_FILE   ?= /tmp/test_number.txt
 NUM_OF_DATA      ?= 1024
 SORTED_DATA_FILE ?= $(TEST_DATA_FILE).sorted
 SORTED_RESULT    ?= /tmp/sort_result.txt
+ITERATIONS       ?= 100
 
 check: sort
 # Generate testing data
@@ -41,6 +42,13 @@ check: sort
 # Because we only want the sorting result.
 	@./sort $(THREADS) $(TEST_DATA_FILE) | tail -n +4 > $(SORTED_RESULT)
 	@bash scripts/compare.sh $(SORTED_DATA_FILE) $(SORTED_RESULT)
+
+repeat-test: sort util/util-average
+# Generate testing data
+	@bash scripts/gen-random-numbers.sh $(NUM_OF_DATA) $(TEST_DATA_FILE)
+	@echo 3 | sudo tee /proc/sys/vm/drop_caches
+	@bash scripts/repeat-test.sh $(THREADS) $(TEST_DATA_FILE) $(ITERATIONS)
+	@./util/util-average ./out/repeat-test-result.dat
 
 clean:
 	rm -f $(OBJS) sort
