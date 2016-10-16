@@ -13,7 +13,6 @@
 
 struct {
     pthread_mutex_t mutex;
-    int cut_thread_count;
 } data_context;
 
 static llist_t *tmp_list;
@@ -52,38 +51,43 @@ void merge_thread_lists(void *data)
     }
 }
 
-void cut_func(void *data)
+void sort_local_list(void *data)
 {
-    llist_t *list = (llist_t *) data;
-    pthread_mutex_lock(&(data_context.mutex));
-    int cut_count = data_context.cut_thread_count;
-    if (list->size > 1 && cut_count < max_cut) {
-        ++data_context.cut_thread_count;
-        pthread_mutex_unlock(&(data_context.mutex));
+    llist_t *local_list = (llist_t *) data;
+    merge_thread_lists(merge_sort(local_list));
+}
 
-        /* cut list */
-        int mid = list->size / 2;
-        llist_t *_list = list_new();
-        _list->head = list_get(list, mid);
-        _list->size = list->size - mid;
-        list_get(list, mid - 1)->next = NULL;
-        list->size = mid;
+void cut_local_list(void *data)
+{
+    llist_t *list = (llist_t *) data, *local_list;
+    node_t *head, *tail;
+    task_t *_task;
+    int local_size = data_count / max_cut;
 
-        /* create new task: left */
-        task_t *_task = (task_t *) malloc(sizeof(task_t));
-        _task->func = cut_func;
-        _task->arg = list;
-        tqueue_push(pool->queue, _task);
-
-        /* create new task: right */
+    head = list->head;
+    for (int i = 0; i < max_cut - 1; ++i) {
+        // Create local list container
+        local_list = list_new();
+        local_list->head = head;
+        local_list->size = local_size;
+        // Cut the local list
+        tail = list_get(local_list, local_size - 1);
+        head = tail->next;
+        tail->next = NULL;
+        // Create new task
         _task = (task_t *) malloc(sizeof(task_t));
-        _task->func = cut_func;
-        _task->arg = _list;
+        _task->func = sort_local_list;
+        _task->arg = local_list;
         tqueue_push(pool->queue, _task);
-    } else {
-        pthread_mutex_unlock(&(data_context.mutex));
-        merge_thread_lists(merge_sort(list));
     }
+    // The last takes the rest.
+    local_list = list_new();
+    local_list->head = head;
+    local_list->size = list->size - local_size * (max_cut - 1);
+    _task = (task_t *) malloc(sizeof(task_t));
+    _task->func = sort_local_list;
+    _task->arg = local_list;
+    tqueue_push(pool->queue, _task);
 }
 
 static void *task_run(void *data __attribute__ ((__unused__)))
@@ -128,11 +132,10 @@ int main(int argc, char const *argv[])
     the_list = list_new();
     data_count = build_list_from_file(the_list, argv[2]);
 
-    max_cut = MIN(thread_count, data_count) - 1;
+    max_cut = MIN(thread_count, data_count);
 
     /* initialize tasks inside thread pool */
     pthread_mutex_init(&(data_context.mutex), NULL);
-    data_context.cut_thread_count = 0;
     tmp_list = NULL;
     pool = (tpool_t *) malloc(sizeof(tpool_t));
     tpool_init(pool, thread_count, task_run);
@@ -145,7 +148,7 @@ int main(int argc, char const *argv[])
 
     /* launch the first task */
     task_t *_task = (task_t *) malloc(sizeof(task_t));
-    _task->func = cut_func;
+    _task->func = cut_local_list;
     _task->arg = the_list;
     tqueue_push(pool->queue, _task);
 
