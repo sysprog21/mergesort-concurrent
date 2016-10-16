@@ -6,7 +6,7 @@ OBJS = list.o threadpool.o merge_sort.o main.o
 
 GIT_HOOKS := .git/hooks/pre-commit
 
-all: $(GIT_HOOKS) sort
+all: $(GIT_HOOKS) sort util/util-average
 
 $(GIT_HOOKS):
 	@scripts/install-git-hooks
@@ -21,6 +21,9 @@ sort: $(OBJS)
 
 genData:
 	uniq test_data/words.txt | sort -R > test_data/input.txt
+
+util/util-average: util/util-average.c
+	$(CC) $(CFLAGS) -o $@ $<
 
 # Default variables for auto testing
 THREADS ?= 4
