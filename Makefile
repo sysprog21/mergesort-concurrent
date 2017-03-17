@@ -9,7 +9,7 @@ $(GIT_HOOKS):
 	@echo
 
 GIT_HOOKS := .git/hooks/applied
-all: $(GIT_HOOKS) sort util/util-average
+all: $(GIT_HOOKS) sort tools/util-average
 
 $(GIT_HOOKS):
 	@scripts/install-git-hooks
@@ -25,7 +25,7 @@ sort: $(OBJS)
 genData:
 	uniq test_data/words.txt | sort -R > test_data/input.txt
 
-util/util-average: util/util-average.c
+tools/util-average: tools/util-average.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 # Default variables for auto testing
@@ -46,12 +46,12 @@ check: sort
 	@./sort $(THREADS) $(TEST_DATA_FILE) | tail -n +4 > $(SORTED_RESULT)
 	@bash scripts/compare.sh $(SORTED_DATA_FILE) $(SORTED_RESULT)
 
-repeat-test: sort util/util-average
+repeat-test: sort tools/util-average
 # Generate testing data
 	@bash scripts/gen-random-numbers.sh $(NUM_OF_DATA) $(TEST_DATA_FILE)
 	@echo 3 | sudo tee /proc/sys/vm/drop_caches
 	@bash scripts/repeat-test.sh $(THREADS) $(TEST_DATA_FILE) $(ITERATIONS)
-	@./util/util-average ./out/repeat-test-result.dat
+	@./tools/util-average ./out/repeat-test-result.dat
 
 clean:
 	rm -f $(OBJS) sort

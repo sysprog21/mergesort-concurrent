@@ -8,5 +8,5 @@
 *.bak
 sort
 test_data/input.txt
-util/util-average
+tools/util-average
 out/*
