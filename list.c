@@ -89,9 +89,9 @@ void list_print(const llist_t * const list)
  */
 void list_free_nodes(llist_t *list)
 {
-    node_t *cur = list->head, *next;
+    node_t *cur = list->head;
     while (cur) {
-        next = cur->next;
+        cur = cur->next;
         free(cur);
     }
     list->head = NULL;
