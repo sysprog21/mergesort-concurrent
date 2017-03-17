@@ -37,7 +37,7 @@ task_t *task_new(void (*func)(void *), void *arg)
  */
 int tqueue_init(tqueue_t *the_queue)
 {
-    if (the_queue == NULL)
+    if (!the_queue)
         return -1;
     the_queue->head = NULL;
     the_queue->tail = NULL;
