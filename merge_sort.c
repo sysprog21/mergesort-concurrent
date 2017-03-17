@@ -10,12 +10,11 @@ llist_t *sort_n_merge(llist_t *a, llist_t *b)
     llist_t *_list = list_new();
     node_t *current = NULL;
     while (a->size && b->size) {
-        // Choose the linked list whose data of first node is small.
+        /* Choose the linked list whose data of first node is small. */
         llist_t *small = (llist_t *)
                          ((intptr_t) a * (a->head->data <= b->head->data) +
                           (intptr_t) b * (a->head->data > b->head->data));
-        // Extract the first node of the chosen list and
-        // put to the new list.
+        /* Extract first node of selected list and put to the new list. */
         if (current) {
             current->next = small->head;
             current = current->next;
@@ -29,7 +28,7 @@ llist_t *sort_n_merge(llist_t *a, llist_t *b)
         current->next = NULL;
     }
 
-    // Append the remaining nodes
+    /* Append the remaining nodes */
     llist_t *remaining = (llist_t *) ((intptr_t) a * (a->size > 0) +
                                       (intptr_t) b * (b->size > 0));
     if (current) current->next = remaining->head;

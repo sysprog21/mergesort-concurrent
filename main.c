@@ -31,16 +31,19 @@ void merge_thread_lists(void *data)
             tmp_list = _list;
             pthread_mutex_unlock(&(data_context.mutex));
         } else {
-            // If there is a local list left by other thread,
-            // pick it and create a task to merge the picked list
-            // and its own local list.
+            /*
+             * If there is a local list left by other thread,
+             * pick it and create a task to merge the picked list
+             * and its own local list.
+             */
             tmp_list = NULL;
             pthread_mutex_unlock(&(data_context.mutex));
             tqueue_push(pool->queue, task_new(merge_thread_lists, sort_n_merge(_list, _t)));
         }
     } else {
-        // All local lists are merged, push a termination task to
-        // the task queue.
+        /*
+         * All local lists are merged, push a termination task to task queue.
+         */
         the_list = _list;
         tqueue_push(pool->queue, task_new(NULL, NULL));
     }
@@ -60,18 +63,18 @@ void cut_local_list(void *data)
 
     head = list->head;
     for (int i = 0; i < max_cut - 1; ++i) {
-        // Create local list container
+        /* Create local list container */
         local_list = list_new();
         local_list->head = head;
         local_list->size = local_size;
-        // Cut the local list
+        /* Cut the local list */
         tail = list_get(local_list, local_size - 1);
         head = tail->next;
         tail->next = NULL;
-        // Create new task
+        /* Create new task */
         tqueue_push(pool->queue, task_new(sort_local_list, local_list));
     }
-    // The last takes the rest.
+    /* The last takes the rest. */
     local_list = list_new();
     local_list->head = head;
     local_list->size = list->size - local_size * (max_cut - 1);
@@ -131,7 +134,7 @@ int main(int argc, char const *argv[])
     struct timeval start, end;
     uint32_t consumed_tasks;
     double duration;
-    // Start when the first task launches.
+    /* Start when the first task launches. */
     gettimeofday(&start, NULL);
 
     /* launch the first task */
@@ -149,7 +152,7 @@ int main(int argc, char const *argv[])
     printf("#Elapsed_time: %.3lf ms\n", duration);
     printf("#Throughput: %d (per sec)\n", (uint32_t)(consumed_tasks * 1000 / duration));
 
-    /* Sorting Result */
+    /* Output sorted result */
     list_print(the_list);
 
     return 0;
