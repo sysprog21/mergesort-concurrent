@@ -4,8 +4,11 @@ OBJS = list.o threadpool.o merge_sort.o main.o
 
 .PHONY: all clean test
 
-GIT_HOOKS := .git/hooks/pre-commit
+$(GIT_HOOKS):
+	@scripts/install-git-hooks
+	@echo
 
+GIT_HOOKS := .git/hooks/applied
 all: $(GIT_HOOKS) sort util/util-average
 
 $(GIT_HOOKS):

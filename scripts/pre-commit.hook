@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ASTYLE_OPTS="--style=kr --indent=spaces=4 --indent-switches"
+ASTYLE_OPTS="--style=kr --indent=spaces=4"
 CPPCHECK_OPTS="-I. --error-exitcode=1 ."
 
 RETURN=0
@@ -12,7 +12,7 @@ fi
 
 CPPCHECK=$(which cppcheck)
 if [ $? -ne 0 ]; then
-    echo "[!] cppecheck not installed. Unable to perform static analysis." >&2
+    echo "[!] cppcheck not installed. Unable to perform static analysis." >&2
     exit 1
 fi
 
