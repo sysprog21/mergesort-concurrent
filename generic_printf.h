@@ -1,5 +1,5 @@
-#ifndef _GENERIC_PRINTF_H_
-#define _GENERIC_PRINTF_H_
+#ifndef _xprintF_H_
+#define _xprintF_H_
 
 #define printf_format_idt(x) \
     _Generic((x), \
@@ -20,9 +20,9 @@
              char *: "%s", \
              void *: "%p")
 
-#define GENERIC_PRINT(x) \
+#define xprint(x) \
     printf(printf_format_idt(x), (x))
-#define GENERIC_PRINTLN(x) \
-    GENERIC_PRINT(x); printf("\n")
+#define xprintln(x) \
+    xprint(x); printf("\n")
 
 #endif
