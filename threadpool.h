@@ -34,7 +34,7 @@ task_t *task_new(void (*func)(void *), void *arg);
  * @struct _tqueue_t threadpool.h "threadpool.h"
  * @brief The data structure for a task queue of _task\_t_
  */
-typedef struct _tqueue_t {
+typedef struct {
     task_t *head;           /**< Pointer to the fist _task\_t_ in queue */
     task_t *tail;           /**< Pointer to the last _task\_t_ in queue */
     pthread_mutex_t mutex;  /**< The mutex lock of this queue */
@@ -60,7 +60,7 @@ uint32_t tqueue_free(tqueue_t *the_queue);
  * @struct _tpool_t threadpool.h "threadpool.h"
  * @brief The data structure for managing thread pool
  */
-typedef struct _tpool_t {
+typedef struct {
     pthread_t *threads; /**< Pointer to the array of threads */
     uint32_t count;     /**< Number of working threads */
     tqueue_t *queue;    /**< Pointer to the task queue */

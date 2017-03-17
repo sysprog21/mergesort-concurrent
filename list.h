@@ -18,7 +18,7 @@ typedef struct node {
  * @struct llist list.h "list.h"
  * @brief Store the information of the linked list.
  */
-typedef struct llist {
+typedef struct {
     node_t *head;   /**< The head of the linked list */
     uint32_t size;  /**< The size of the linked list */
 } llist_t;
